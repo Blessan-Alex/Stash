@@ -1,0 +1,38 @@
+{
+  "canisters": {
+    "internet_identity": {
+      "candid": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity.did",
+      "frontend": {},
+      "remote": {
+        "id": {
+          "ic": "rdmx6-jaaaa-aaaaa-aaadq-cai"
+        }
+      },
+      "type": "custom",
+      "wasm": "https://github.com/dfinity/internet-identity/releases/latest/download/internet_identity_dev.wasm.gz"
+    },
+    "piggybank_backend": {
+      "candid": "src/piggybank_backend/piggybank_backend.did",
+      "package": "piggybank_backend",
+      "type": "rust"
+    },
+    "piggybank_frontend": {
+      "dependencies": [
+        "piggybank_backend"
+      ],
+      "source": [
+        "src/piggybank_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "piggybank_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
