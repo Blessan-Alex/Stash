@@ -83,8 +83,15 @@ class BackendService {
     async mintTokens(amount, lockPeriod) {
         try {
             await this.ensureInitialized();
-            console.log("Minting tokens...", { amount, lockPeriod });
-            const result = await this.actor.mint_tokens(amount, lockPeriod);
+            // Ensure amount is BigInt
+            const mintAmount = BigInt(amount);
+            console.log("Minting tokens...", { 
+                amount: mintAmount.toString(),
+                amountType: typeof mintAmount,
+                isBigInt: mintAmount instanceof BigInt,
+                lockPeriod 
+            });
+            const result = await this.actor.mint_tokens(mintAmount, lockPeriod);
             console.log("Mint result:", result);
             if ("Ok" in result) {
                 return result.Ok;
@@ -98,18 +105,50 @@ class BackendService {
     }
 
     async burnTokens(amount) {
+        if (!this.initialized) {
+            throw new Error("Service not initialized");
+        }
+
         try {
-            await this.ensureInitialized();
-            console.log("Burning tokens...", { amount });
-            const result = await this.actor.burn_tokens(amount);
-            console.log("Burn result:", result);
-            if ("Ok" in result) {
-                return result.Ok;
-            } else {
+            // Ensure amount is BigInt
+            const burnAmount = BigInt(amount);
+            console.log("Attempting to burn tokens:", {
+                amount: burnAmount.toString(),
+                amountType: typeof burnAmount,
+                isBigInt: burnAmount instanceof BigInt
+            });
+            
+            // First check the current balance
+            const currentBalance = await this.getBalance();
+            console.log("Current balance before burn:", {
+                total: currentBalance?.total_balance?.toString(),
+                available: currentBalance?.available_balance?.toString(),
+                required: burnAmount.toString()
+            });
+            
+            if (!currentBalance || !currentBalance.total_balance || currentBalance.total_balance < burnAmount) {
+                console.error("Insufficient balance. Required:", burnAmount.toString(), "Available:", currentBalance?.total_balance?.toString());
+                throw new Error("Insufficient balance");
+            }
+
+            const result = await this.actor.burn_tokens(burnAmount);
+            console.log("Burn tokens result:", result);
+
+            if (result.Err) {
+                console.error("Error burning tokens:", result.Err);
                 throw new Error(result.Err);
             }
+
+            // Verify the balance after burn
+            const newBalance = await this.getBalance();
+            console.log("New balance after burn:", {
+                total: newBalance?.total_balance?.toString(),
+                available: newBalance?.available_balance?.toString()
+            });
+
+            return true;
         } catch (error) {
-            console.error("Error burning tokens:", error);
+            console.error("Error in burnTokens:", error);
             throw error;
         }
     }

@@ -65,6 +65,7 @@ const Dashboard = () => {
       setLoading(true);
       setError('');
       
+      // Convert to BigInt without any multiplication
       const amount = BigInt(Math.floor(Number(depositAmount)));
       console.log('Depositing amount:', amount.toString());
       
@@ -130,67 +131,51 @@ const Dashboard = () => {
       setLoading(true);
       setError('');
       
+      // Convert to BigInt without any multiplication
       const withdrawAmountInBigInt = BigInt(Math.floor(Number(withdrawAmount)));
 
-      // First check if user has sufficient total balance
+      // Check total balance instead of available balance
       if (!balance?.total_balance || balance.total_balance < withdrawAmountInBigInt) {
-        setShowInsufficientBalanceModal(true);
+        console.log('Balance check:', {
+          total: balance?.total_balance?.toString(),
+          required: withdrawAmountInBigInt.toString()
+        });
+        setError(`Insufficient balance. You have ₹${formatAmount(balance?.total_balance)} total balance.`);
         setLoading(false);
         return;
       }
 
-      // Find matching deposit
-      const matchingDeposit = balance?.deposits?.find(deposit => 
-        deposit.amount === withdrawAmountInBigInt
-      );
-
-      if (matchingDeposit) {
-        const depositTime = Number(matchingDeposit.deposit_time) / 1000000;
-        const currentTime = Date.now() / 1000;
-        const lockPeriodInSeconds = {
-          'ThreeMonths': 90 * 24 * 60 * 60,
-          'SixMonths': 180 * 24 * 60 * 60,
-          'TwelveMonths': 365 * 24 * 60 * 60
-        }[Object.keys(matchingDeposit.lock_period)[0]];
-
-        if (currentTime - depositTime < lockPeriodInSeconds) {
-          setSelectedDeposit(matchingDeposit);
-          setShowWarningModal(true);
-          setLoading(false);
-          return;
-        }
-      }
-
-      // If we get here, it's a regular withdrawal
-      await backendService.burnTokens(withdrawAmountInBigInt);
+      // Simple withdrawal
+      console.log('Sending withdrawal request to backend:', withdrawAmountInBigInt.toString());
+      const result = await backendService.burnTokens(withdrawAmountInBigInt);
       
-      // Update transaction history
-      const transaction = {
-        type: 'Withdrawal',
-        amount: Number(withdrawAmount),
-        lockPeriod: matchingDeposit ? Object.keys(matchingDeposit.lock_period)[0] : '-',
-        interestRate: matchingDeposit ? getInterestRate(Object.keys(matchingDeposit.lock_period)[0]) : '-',
-        date: new Date(),
-        isEarlyWithdrawal: false
-      };
-      setTransactionHistory(prev => [transaction, ...prev]);
+      if (result) {
+        // Add withdrawal to transaction history
+        const transaction = {
+          type: 'Withdrawal',
+          amount: Number(withdrawAmount),
+          lockPeriod: '-',
+          interestRate: '-',
+          date: new Date(),
+          isEarlyWithdrawal: false
+        };
+        setTransactionHistory(prev => [transaction, ...prev]);
 
-      // Update local balance state
-      const currentBalance = balance;
-      setBalance({
-        ...currentBalance,
-        total_balance: currentBalance.total_balance - withdrawAmountInBigInt,
-        locked_balance: currentBalance.locked_balance - withdrawAmountInBigInt,
-        available_balance: currentBalance.available_balance - withdrawAmountInBigInt,
-        deposits: currentBalance.deposits.filter(deposit => 
-          deposit.amount !== withdrawAmountInBigInt
-        )
-      });
+        // Update local balance - subtract exact amount
+        setBalance(prev => ({
+          ...prev,
+          total_balance: prev.total_balance - withdrawAmountInBigInt,
+          available_balance: prev.available_balance - withdrawAmountInBigInt
+        }));
 
-      setWithdrawAmount('');
+        setWithdrawAmount('');
+        await fetchBalance(); // Refresh balance from backend
+      } else {
+        setError('Failed to withdraw. Please try again.');
+      }
     } catch (err) {
       console.error('Error withdrawing:', err);
-      setError('Failed to withdraw. Please try again.');
+      setError(err.message || 'Failed to withdraw. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -205,7 +190,6 @@ const Dashboard = () => {
       const penaltyAmount = BigInt(Math.floor(Number(selectedDeposit.amount) * 0.1));
       const totalWithdrawAmount = withdrawAmountInBigInt + penaltyAmount;
       
-      // Check if user still has sufficient balance including penalty
       if (!balance?.total_balance || balance.total_balance < totalWithdrawAmount) {
         setError('Insufficient balance for withdrawal including penalty');
         setShowWarningModal(false);
@@ -213,34 +197,38 @@ const Dashboard = () => {
         return;
       }
 
-      await backendService.burnTokens(totalWithdrawAmount);
+      const result = await backendService.burnTokens(totalWithdrawAmount);
       
-      // Update transaction history
-      const transaction = {
-        type: 'Withdrawal',
-        amount: Number(selectedDeposit.amount),
-        lockPeriod: Object.keys(selectedDeposit.lock_period)[0],
-        interestRate: getInterestRate(Object.keys(selectedDeposit.lock_period)[0]),
-        date: new Date(),
-        isEarlyWithdrawal: true,
-        penalty: Number(penaltyAmount)
-      };
-      setTransactionHistory(prev => [transaction, ...prev]);
+      if (result) {
+        // Add early withdrawal to transaction history
+        const transaction = {
+          type: 'Withdrawal',
+          amount: Number(selectedDeposit.amount),
+          lockPeriod: Object.keys(selectedDeposit.lock_period)[0],
+          interestRate: getInterestRate(Object.keys(selectedDeposit.lock_period)[0]),
+          date: new Date(),
+          isEarlyWithdrawal: true,
+          penalty: Number(penaltyAmount)
+        };
+        setTransactionHistory(prev => [transaction, ...prev]);
 
-      // Update local balance state
-      const currentBalance = balance;
-      setBalance({
-        ...currentBalance,
-        total_balance: currentBalance.total_balance - totalWithdrawAmount,
-        locked_balance: currentBalance.locked_balance - withdrawAmountInBigInt,
-        available_balance: currentBalance.available_balance - totalWithdrawAmount,
-        deposits: currentBalance.deposits.filter(deposit => 
-          deposit.amount !== withdrawAmountInBigInt
-        )
-      });
+        // Update local balance
+        setBalance(prev => ({
+          ...prev,
+          total_balance: prev.total_balance - totalWithdrawAmount,
+          locked_balance: prev.locked_balance - withdrawAmountInBigInt,
+          available_balance: prev.available_balance - totalWithdrawAmount,
+          deposits: prev.deposits.filter(deposit => 
+            deposit.amount !== withdrawAmountInBigInt
+          )
+        }));
 
-      setShowWarningModal(false);
-      setSelectedDeposit(null);
+        setShowWarningModal(false);
+        setSelectedDeposit(null);
+        await fetchBalance(); // Refresh balance from backend
+      } else {
+        setError('Failed to withdraw. Please try again.');
+      }
     } catch (err) {
       console.error('Error withdrawing:', err);
       setError('Failed to withdraw. Please try again.');
@@ -255,6 +243,7 @@ const Dashboard = () => {
 
   const formatAmount = (amount) => {
     if (!amount) return '0';
+    // Convert BigInt to number and format with 2 decimal places
     return Number(amount).toFixed(2);
   };
 
