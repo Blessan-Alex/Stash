@@ -24,6 +24,6 @@ service : {
     // Token methods
     mint_tokens: (nat64, LockPeriod) -> (variant { Ok: nat64; Err: text });
     burn_tokens: (nat64) -> (variant { Ok: nat64; Err: text });
-    get_balance: () -> (variant { Ok: UserBalance; Err: text }) query;
+    get_balance: () -> (variant { Ok: UserBalance; Err: text });
     apply_rewards: () -> (variant { Ok: nat64; Err: text });
-}
+} 
