@@ -273,7 +273,7 @@ const Dashboard = () => {
       <nav className="dashboard-nav">
         <div className="logo">
           <img src="/logo.png" alt="PiggyBank Logo" className="logo-image" />
-          <span className="logo-text">PiggyBank</span>
+          <span className="logo-text">Stash</span>
         </div>
         <div className="user-info">
           <span className="principal-id">ID: {principal?.toString()}</span>
