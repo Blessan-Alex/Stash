@@ -1,43 +1,41 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { fileURLToPath, URL } from 'url';
-import environment from 'vite-plugin-environment';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import path from 'path';
 
 export default defineConfig({
-  root: '.',
-  build: {
-    outDir: 'dist',
-    emptyOutDir: true,
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      define: {
-        global: "globalThis",
-      },
-    },
-  },
-  server: {
-    port: 3000,
-    proxy: {
-      "/api": {
-        target: "http://127.0.0.1:4943",
-        changeOrigin: true,
-      },
-    },
-  },
   plugins: [react()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-      'buffer': 'buffer',
+      '@': path.resolve(__dirname, './src'),
     },
-    dedupe: ['@dfinity/agent'],
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:4943',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
   define: {
+    global: 'window',
     'process.env': {},
-    'global': {},
+  },
+  build: {
+    target: 'es2020',
+    rollupOptions: {
+      external: ['buffer'],
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'es2020',
+    },
+    include: [
+      '@dfinity/agent',
+      '@dfinity/auth-client',
+      '@dfinity/principal',
+    ],
   },
 });

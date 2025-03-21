@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { AuthClient } from '@dfinity/auth-client';
-import { Principal } from '@dfinity/principal';
+import { backendService } from '../services/backendService';
 
 const AuthContext = createContext();
 
@@ -19,12 +19,13 @@ export const AuthProvider = ({ children }) => {
 
   const checkAuth = async () => {
     try {
-      const client = await AuthClient.create();
-      const isAuthed = await client.isAuthenticated();
+      const authClient = await AuthClient.create();
+      const isAuthed = await authClient.isAuthenticated();
       if (isAuthed) {
-        const identity = client.getIdentity();
+        const identity = authClient.getIdentity();
         setPrincipal(identity.getPrincipal());
         setIsAuthenticated(true);
+        await backendService.init();
       }
     } catch (error) {
       console.error('Auth check failed:', error);
@@ -35,15 +36,16 @@ export const AuthProvider = ({ children }) => {
 
   const login = async () => {
     try {
-      const client = await AuthClient.create({
+      const authClient = await AuthClient.create({
         identityProvider: 'https://identity.ic0.app',
       });
-      await client.login({
+      await authClient.login({
         identityProvider: 'https://identity.ic0.app',
-        onSuccess: () => {
-          const identity = client.getIdentity();
+        onSuccess: async () => {
+          const identity = authClient.getIdentity();
           setPrincipal(identity.getPrincipal());
           setIsAuthenticated(true);
+          await backendService.init();
         },
       });
     } catch (error) {
@@ -54,8 +56,8 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      const client = await AuthClient.create();
-      await client.logout();
+      const authClient = await AuthClient.create();
+      await authClient.logout();
       setPrincipal(null);
       setIsAuthenticated(false);
     } catch (error) {

@@ -251,6 +251,7 @@
   border-radius: 1rem;
   box-shadow: 0 4px 6px var(--feature-shadow);
   border: 1px solid var(--feature-border);
+  margin-top: 2rem;
 }
 
 .deposits-table h2 {
@@ -263,6 +264,7 @@
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 1rem;
 }
 
 th, td {
@@ -280,6 +282,28 @@ th {
 
 td {
   color: var(--text-color);
+  vertical-align: middle;
+}
+
+.transaction-type {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  display: block;
+  min-width: 100px;
+  text-transform: capitalize;
+  margin: 0 auto;
+}
+
+.transaction-type.deposit {
+  background-color: rgba(135, 35, 65, 0.1);
+  color: var(--primary);
+}
+
+.transaction-type.withdrawal {
+  background-color: rgba(225, 117, 100, 0.1);
+  color: var(--accent);
 }
 
 tr:hover {
@@ -316,9 +340,23 @@ tr:hover {
     font-size: 2rem;
   }
 
+  .deposits-table {
+    padding: 1rem;
+  }
+
   table {
     display: block;
     overflow-x: auto;
+  }
+
+  th, td {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .transaction-type {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
   }
 
   .logo-text {
@@ -327,5 +365,161 @@ tr:hover {
 
   .logo-image {
     height: 32px;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: var(--feature-bg);
+  padding: 2.5rem;
+  border-radius: 1rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--feature-border);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.warning-details {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: rgba(135, 35, 65, 0.05);
+  border-radius: 0.5rem;
+  border: 1px solid var(--feature-border);
+}
+
+.warning-details p {
+  margin: 0.75rem 0;
+  font-family: 'Inter', sans-serif;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+.warning-details .penalty {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.warning-details .withdraw-amount {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.warning-details .warning-text {
+  color: var(--accent);
+  font-weight: 500;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--feature-border);
+  font-size: 1.1rem;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.modal-buttons button {
+  flex: 1;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn {
+  background-color: var(--text-light);
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: var(--text-color);
+  transform: translateY(-2px);
+}
+
+.confirm-btn {
+  background-color: var(--accent);
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.early-withdraw-btn {
+  padding: 0.5rem 1rem;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: auto;
+}
+
+.early-withdraw-btn:hover {
+  background-color: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+  }
+
+  .warning-details p {
+    font-size: 1rem;
+  }
+
+  .warning-details .penalty,
+  .warning-details .withdraw-amount {
+    font-size: 1.1rem;
   }
 } 
