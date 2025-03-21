@@ -1,25 +1,48 @@
-# Various IDEs and Editors
-.vscode/
+# Dependencies
+node_modules/
+target/
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE and editor files
 .idea/
-**/*~
-
-# Mac OSX temporary files
+.vscode/
+*.swp
+*.swo
 .DS_Store
-**/.DS_Store
 
-# dfx temporary files
+# Rust specific
+**/*.rs.bk
+Cargo.lock
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build output
+/piggybank_frontend/dist/
+/piggybank_frontend/build/
+/piggybank_backend/target/
+
+# DFINITY specific
 .dfx/
 
-# generated files
-**/declarations/
+# Testing
+/coverage
 
-# rust
-target/
+# Misc
+.pnp
+.pnp.js
 
-# frontend code
-node_modules/
-dist/
-.svelte-kit/
-
-# environment variables
-.env
+# Internet Computer specific
+.ic/
+*.wasm
+*.candid

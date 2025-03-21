@@ -1,3 +1,89 @@
+# PiggyBank - Internet Computer DeFi Platform
+
+A decentralized finance (DeFi) platform built on the Internet Computer blockchain that allows users to deposit INR and earn interest through PIGGYUSD tokens.
+
+## Features
+
+- Internet Identity Authentication
+- INR to PIGGYUSD token conversion
+- Flexible deposit periods with different interest rates
+- Early withdrawal option with penalty
+- Real-time balance tracking
+- Modern and responsive UI
+
+## Tech Stack
+
+### Frontend
+- React
+- Vite
+- Internet Identity
+- DFINITY Agent
+- React Router DOM
+
+### Backend
+- Rust
+- Internet Computer (DFINITY)
+- Candid Interface
+
+## Prerequisites
+
+- Node.js (v16 or higher)
+- Rust (latest stable version)
+- DFINITY SDK (dfx)
+- Internet Identity
+
+## Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/piggybank.git
+cd piggybank
+```
+
+2. Install frontend dependencies:
+```bash
+cd src/piggybank_frontend
+npm install
+```
+
+3. Start the frontend development server:
+```bash
+npm start
+```
+
+4. Deploy the backend canister:
+```bash
+cd ../piggybank_backend
+dfx deploy
+```
+
+## Environment Variables
+
+Create a `.env` file in the frontend directory with the following variables:
+```
+VITE_CANISTER_ID=your_canister_id
+VITE_II_CANISTER_ID=your_ii_canister_id
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- DFINITY Foundation
+- Internet Computer Community
+- React Team
+- Rust Team
+
 # Stash - Your PiggyBank on STEROIDS
 
 Stash is a revolutionary decentralized savings platform built on the Internet Computer blockchain. It transforms traditional savings into an engaging, rewarding experience with modern technology and innovative incentives.

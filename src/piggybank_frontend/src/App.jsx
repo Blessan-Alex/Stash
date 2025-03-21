@@ -1,8 +1,23 @@
 import React from 'react';
 import ReactTypingEffect from 'react-typing-effect';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Dashboard from './components/Dashboard';
 import './App.css';
 
-function App() {
+const LandingPage = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleStart = async () => {
+    try {
+      await login();
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+
   return (
     <div className="app-container">
       <nav className="navbar">
@@ -17,19 +32,25 @@ function App() {
           <h1>Welcome to Stash</h1>
           <p className="subtitle">
             <ReactTypingEffect
-              text={["Your Piggybank on STEROIDS!!"]}
+              text={[
+                "Your Piggybank on STEROIDS!!",
+                "Save Smarter, Earn More",
+                "Secure Your Future",
+                "Your Money, Your Control"
+              ]}
               speed={50}
-              eraseDelay={700000}
+              eraseDelay={2000}
+              typingDelay={1000}
               displayTextRenderer={(text, i) => {
                 return (
-                  <span>
+                  <span className="typing-text">
                     {text}
                   </span>
                 );
               }}
             />
           </p>
-          <button className="start-button">
+          <button className="start-button" onClick={handleStart}>
             Start Now
             <span className="arrow">→</span>
           </button>
@@ -53,6 +74,31 @@ function App() {
         </div>
       </main>
     </div>
+  );
+};
+
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/" />;
+};
+
+function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
+        </Routes>
+      </AuthProvider>
+    </Router>
   );
 }
 

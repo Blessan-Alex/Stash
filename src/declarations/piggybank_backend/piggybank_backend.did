@@ -1,0 +1,29 @@
+type LockPeriod = variant {
+    ThreeMonths;
+    SixMonths;
+    TwelveMonths;
+};
+
+type TokenDeposit = record {
+    amount: nat64;
+    lock_period: LockPeriod;
+    deposit_time: nat64;
+    interest_rate: float64;
+    early_withdrawal_penalty: float64;
+};
+
+type UserBalance = record {
+    total_balance: nat64;
+    locked_balance: nat64;
+    available_balance: nat64;
+    deposits: vec TokenDeposit;
+    rewards_earned: nat64;
+};
+
+service : {
+    // Token methods
+    mint_tokens: (nat64, LockPeriod) -> (variant { Ok: nat64; Err: text });
+    burn_tokens: (nat64) -> (variant { Ok: nat64; Err: text });
+    get_balance: () -> (variant { Ok: UserBalance; Err: text }) query;
+    apply_rewards: () -> (variant { Ok: nat64; Err: text });
+}

@@ -31,8 +31,13 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      'buffer': 'buffer',
     },
     dedupe: ['@dfinity/agent'],
+  },
+  define: {
+    'process.env': {},
+    'global': {},
   },
 });
