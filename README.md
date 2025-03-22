@@ -1,3 +1,94 @@
+# Stash - Your Smart, Secure Piggy Bank
+
+**Guard your cash, grow your stash**
+
+Stash is a smart piggy bank that securely stores your money while growing your savings through incentivized lock-in periods. Built on the Internet Computer Protocol (ICP) blockchain, Stash provides fast, secure, and low-cost financial services for everyone.
+
+## 🚨 Problem We're Solving
+75% of Indians do not have emergency funds. Stash turns your savings into a secure, self-growing financial reserve, so you're always ready for life's surprises.
+
+## 🔑 Key Features
+
+- **Secure Blockchain Savings**: Store your funds on the ICP blockchain for maximum security
+- **Interest on Deposits**: Earn rewards based on customizable lock-in periods
+- **Flexible Lock-up Options**: Choose from 3, 6, or 12-month plans with increasing interest rates
+- **Real-time Balance Tracking**: Monitor your savings and growth in real-time
+- **Transparent Transaction History**: View detailed records of all transactions
+- **Early Withdrawal Option**: Access your funds before the lock-in period (with penalty)
+- **Secure Authentication**: Internet Identity integration for secure logins
+
+## 🛠️ Technology Stack
+
+### Frontend
+- React (JavaScript/JSX)
+- Vite (Build tool and development server)
+- React Router for navigation
+- CSS for styling
+
+### Backend
+- Internet Computer Protocol (ICP) Blockchain
+- Rust for smart contract development
+- Candid for interface definitions
+
+## 📋 How to Run the Project
+
+1. **Install Prerequisites**:
+   ```bash
+   # Install dfx (Internet Computer SDK)
+   sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
+   ```
+
+2. **Clone and Setup**:
+   ```bash
+   git clone <repository-url>
+   cd piggybank
+   ```
+
+3. **Start the Local Replica**:
+   ```bash
+   dfx start --clean
+   ```
+
+4. **Deploy the Canisters**:
+   ```bash
+   # In a new terminal
+   dfx deploy
+   ```
+
+5. **Start the Frontend**:
+   ```bash
+   cd src/piggybank_frontend
+   npm install
+   npm start
+   ```
+
+6. **Access the Application**:
+   - Frontend: http://localhost:3001/
+   - Backend canister: Check the URLs shown after deployment
+
+## 🗺️ Roadmap
+
+### Short Term
+- Finalize stable coin integration and UI polish
+- Conduct comprehensive testing and deploy on testnet
+
+### Long Term
+- Integrate real fiat currency (INR to USDC stable coin) using Transack
+- Expand reward features and user engagement mechanisms
+- Develop mobile applications for wider accessibility
+
+## 💡 Technical Implementation
+
+- Built on the Internet Computer Protocol for decentralized storage and computation
+- Smart contracts written in Rust for efficiency and security
+- User authentication via Internet Identity for secure and private access
+- Low computational overhead for reduced costs
+- High-performance blockchain for faster transactions
+
+---
+
+Stash - The smart way to save for tomorrow, today.
+
 # PiggyBank - Internet Computer DeFi Platform
 
 A decentralized finance (DeFi) platform built on the Internet Computer blockchain that allows users to deposit INR and earn interest through PIGGYUSD tokens.
@@ -83,79 +174,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Internet Computer Community
 - React Team
 - Rust Team
-
-# Stash - Your PiggyBank on STEROIDS
-
-Stash is a revolutionary decentralized savings platform built on the Internet Computer blockchain. It transforms traditional savings into an engaging, rewarding experience with modern technology and innovative incentives.
-
-## 🌟 Key Features
-
-### 💰 Smart Savings
-- **Automated Savings**: Set up recurring deposits and watch your money grow
-- **Goal Tracking**: Create and monitor multiple savings goals with visual progress
-- **Smart Notifications**: Get alerts for milestones and opportunities
-
-### 🎁 Rewards & Incentives
-- **Earn While You Save**: Get rewarded for maintaining consistent saving habits
-- **Achievement System**: Unlock badges and rewards for reaching savings milestones
-- **Community Challenges**: Participate in group savings challenges for extra rewards
-
-### 🔒 Security & Privacy
-- **Blockchain Security**: Your funds are protected by the Internet Computer's advanced cryptography
-- **Self-Custody**: You maintain full control of your assets
-- **Privacy-First**: Your financial data stays private and secure
-
-### 💎 Premium Features
-- **Savings Analytics**: Track your spending patterns and get personalized insights
-- **Investment Options**: Grow your savings with integrated investment opportunities
-- **Family Accounts**: Manage shared savings goals with family members
-
-## 🚀 Why Choose Stash?
-
-- **Modern Interface**: Clean, intuitive design for a seamless user experience
-- **Instant Transactions**: Lightning-fast deposits and withdrawals
-- **No Hidden Fees**: Transparent fee structure with no surprise charges
-- **Cross-Platform**: Access your savings from any device, anywhere
-
-## 🛠️ Technical Stack
-
-- **Frontend**: React with Vite
-- **Backend**: Internet Computer (Rust)
-- **Authentication**: Internet Identity
-- **Smart Contracts**: Motoko
-
-## 🔐 Getting Started
-
-1. Visit [Stash App](https://your-app-url.ic0.app)
-2. Connect with Internet Identity
-3. Create your first savings goal
-4. Start earning rewards!
-
-## 📱 Supported Platforms
-
-- Web Browser (Chrome, Firefox, Safari)
-- Mobile Web Browser
-- Progressive Web App (PWA) support coming soon
-
-## 🔮 Future Roadmap
-
-- [ ] Mobile App Development
-- [ ] Advanced Investment Features
-- [ ] Social Savings Features
-- [ ] AI-Powered Savings Recommendations
-- [ ] Integration with Traditional Banking
-
-## 🤝 Contributing
-
-We welcome contributions! Please read our contributing guidelines before submitting pull requests.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-Built with ❤️ on the Internet Computer
 
 # `piggybank`
 
